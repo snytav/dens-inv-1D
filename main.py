@@ -10,7 +10,7 @@ Original file is located at
 import torch         # библиотека для работы с нейронныит сетями. Здесь нужна для вычислений с производными
 import numpy as np   # математическая библиотека Python
 boxsize = 1.0        # размер расчетной области
-Nx = 10              # количество узлов
+Nx = 2               # количество узлов
 N = 100              # количество частиц
 pos = np.random.rand(N,1)*boxsize #  массив координат частиц
 pos = torch.from_numpy(pos)       #  преобразоввание в формат библиотеки PyTorch
@@ -23,19 +23,20 @@ def denst(Pos,Nx,boxsize,n0):                      #  функция, вычис
         j = torch.floor(pos / dx).long()
         #print('pos,j ',pos,j)
         jp1 = j + 1
-        weight_j=(jp1 * dx - pos) / dx
-        weight_jp1 = (pos - j * dx) / dx
+        # weight_j=(jp1 * dx - pos) / dx
+        # weight_jp1 = (pos - j * dx) / dx
         jp1 = torch.remainder(jp1, Nx)
         j   = torch.remainder(j, Nx)
-        n[j] += weight_j
-        n[jp1] += weight_jp1
-    n *= n0 * boxsize / N / dx
+        n[j] += (jp1 * dx - pos) / dx
+        n[jp1] +=  (pos - j * dx) / dx
+    #n *= n0 * boxsize / N / dx
     return n
 
 
-
+pos = torch.tensor([0.25])
 n = denst(pos,Nx,boxsize,1.0)                     # пробный запуск
-#n
+print(n)
+qq = 0
 
 xx = torch.linspace(0,boxsize,Nx)
 
