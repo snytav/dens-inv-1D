@@ -27,8 +27,8 @@ def denst(Pos,Nx,boxsize,n0):                      #  функция, вычис
         # weight_jp1 = (pos - j * dx) / dx
         jp1 = torch.remainder(jp1, Nx)
         j   = torch.remainder(j, Nx)
-        n[j] += (jp1 * dx - pos) / dx
-        n[jp1] +=  (pos - j * dx) / dx
+        n[j] += jp1  - pos / dx
+        n[jp1] +=  pos / dx - j
     #n *= n0 * boxsize / N / dx
     return n
 
